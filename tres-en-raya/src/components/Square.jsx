@@ -1,6 +1,7 @@
-export const Square = ({ children, isSelected, updateBoard, index }) => {
+// eslint-disable-next-line react/prop-types
+export const Square = ({ children, isSelected, updateBoard, index, notFinish }) => {
 
-    const className = `square ${isSelected ? 'is-selected' : ''}`
+    const className = `square ${isSelected && !notFinish ? 'animated flash' : ''}`
 
     const handleClick = () => {
         updateBoard(index)
@@ -8,7 +9,7 @@ export const Square = ({ children, isSelected, updateBoard, index }) => {
 
     return (
         <div onClick={handleClick} className={className}>
-            {children}
+            <img src={children} />
         </div>
     )
 }

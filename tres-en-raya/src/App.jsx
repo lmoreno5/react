@@ -21,10 +21,13 @@ function App() {
 
   const [winner, setWinner] = useState(null)
 
+  const [finish, setFinish] = useState(false)
+
   const resetGame = () => {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
+    setFinish(false)
 
     resetGameStorage()
   }
@@ -49,8 +52,10 @@ function App() {
     if (newWinner) {
       confetti()
       setWinner(newWinner)
+      setFinish(true)
     } else if (checkEndGame(newBoard)) {
       setWinner(false)
+      setFinish(true)
     }
   }
 
@@ -75,8 +80,8 @@ function App() {
       </section>
 
       <section className="turn">
-        <Square isSelected={turn === TURNS.X}>{TURNS.X}</Square>
-        <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
+        <Square isSelected={turn === TURNS.X} notFinish={finish}>{TURNS.X}</Square>
+        <Square isSelected={turn === TURNS.O} notFinish={finish}>{TURNS.O}</Square>
       </section>
 
       <WinnerModal resetGame={resetGame} winner={winner} />

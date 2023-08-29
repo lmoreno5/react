@@ -1,6 +1,8 @@
+const PATH = './src/assets/'
+
 export const TURNS = {
-    X: 'x',
-    O: 'o'
+    X: PATH + 'favicon.ico',
+    O: PATH + 'groot.ico'
 }
 
 export const WINNER_COMBOS = [

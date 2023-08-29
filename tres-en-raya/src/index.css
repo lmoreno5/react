@@ -17,8 +17,8 @@
 
 body {
   margin: 0;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  place-content: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -31,13 +31,24 @@ body {
 
 .board {
   width: fit-content;
-  margin: 40px auto;
+  margin: 0 auto;
   text-align: center;
 }
 
 .board h1 {
   color: #eee;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 20px #03daf1;
+  }
+
+  to {
+    text-shadow: 0 0 30px #aa2a2a, 0 0 10px #f08383;
+  }
 }
 
 .board button {
@@ -46,7 +57,7 @@ body {
   background: transparent;
   border: 2px solid #eee;
   color: #eee;
-  width: 100px;
+  width: 180px;
   border-radius: 5px;
   transition: 0.2s;
   font-weight: bold;
@@ -67,10 +78,11 @@ body {
 .turn {
   display: flex;
   justify-content: center;
-  margin: 15px auto;
+  margin: 30px auto;
   width: fit-content;
   position: relative;
   border-radius: 10px;
+  gap: 20px;
 }
 
 .turn .square,
@@ -88,7 +100,7 @@ body {
 
 .winner {
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   top: 0;
   left: 0;
@@ -119,6 +131,10 @@ body {
   gap: 15px;
 }
 
+.winner .win.noborder {
+  border: none;
+}
+
 .square {
   width: 100px;
   height: 100px;
@@ -128,4 +144,56 @@ body {
   place-items: center;
   cursor: pointer;
   font-size: 48px;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+}
+
+.animated {
+  -webkit-animation-duration: 5s;
+  animation-duration: 5s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+
+}
+
+.board footer button {
+  margin: 10px;
+}
+
+@-webkit-keyframes flash {
+
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+
+@keyframes flash {
+
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+
+  25%,
+  75% {
+    opacity: 0;
+  }
+}
+
+.flash {
+  -webkit-animation-name: flash;
+  animation-name: flash;
 }
