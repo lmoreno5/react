@@ -1,39 +1,32 @@
 import { useState } from "react"
 import confetti from "canvas-confetti"
-
 import { Square } from "./components/Square.jsx"
-import { TURNS, WINNER_COMBOS } from "./constants.js"
-
-
+import { TURNS } from "./constants.js"
+import { checkWinnerFrom, checkEndGame } from "./logic/board.js"
+import { WinnerModal } from "./components/WinnerModal.jsx"
+import { saveGameToStorage, resetGameStorage } from "./logic/storage/index.js"
 
 function App() {
 
-  const [board, setBoard] = useState(Array(9).fill(null))
-  const [turn, setTurn] = useState(TURNS.X)
-  const [winner, setWinner] = useState(null)
+  const [board, setBoard] = useState(() => {
+    const boardFromStorage = window.localStorage.getItem('board')
+    if (boardFromStorage) return JSON.parse(boardFromStorage)
+    return Array(9).fill(null)
+  })
 
-  const checkWinner = (boardToCheck) => {
-    for (const combo of WINNER_COMBOS) {
-      const [a, b, c] = combo
-      if (
-        boardToCheck[a] &&
-        boardToCheck[a] === boardToCheck[b] &&
-        boardToCheck[a] === boardToCheck[c]
-      ) {
-        return boardToCheck[a]
-      }
-    }
-    return null
-  }
+  const [turn, setTurn] = useState(() => {
+    const turnFromStorage = window.localStorage.getItem('turn')
+    return turnFromStorage ?? TURNS.X
+  })
+
+  const [winner, setWinner] = useState(null)
 
   const resetGame = () => {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
-  }
 
-  const checkEndGame = (newBoard) => {
-    return newBoard.every((square) => square !== null)
+    resetGameStorage()
   }
 
   const updateBoard = (index) => {
@@ -47,7 +40,12 @@ function App() {
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
 
-    const newWinner = checkWinner(newBoard)
+    saveGameToStorage({
+      board: newBoard,
+      turn: newTurn
+    })
+
+    const newWinner = checkWinnerFrom(newBoard)
     if (newWinner) {
       confetti()
       setWinner(newWinner)
@@ -81,29 +79,7 @@ function App() {
         <Square isSelected={turn === TURNS.O}>{TURNS.O}</Square>
       </section>
 
-      {
-        winner !== null && (
-          <section className="winner">
-            <div className="text">
-              <h2>
-                {
-                  winner === false
-                    ? 'Empate'
-                    : 'Ha ganado: '
-                }
-              </h2>
-
-              <header className="win">
-                {winner && <Square>{winner}</Square>}
-              </header>
-
-              <footer>
-                <button onClick={resetGame}>Empezar de nuevo</button>
-              </footer>
-            </div>
-          </section>
-        )
-      }
+      <WinnerModal resetGame={resetGame} winner={winner} />
     </main>
   )
 }
